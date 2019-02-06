@@ -6,11 +6,41 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
+  /*
+   Mercury: 0.38
+  Venus: 0.91
+  Earth: 1.00
+  Mars: 0.38
+  Jupiter: 2.34
+  Saturn: 1.06
+  Uranus: 0.92
+  Neptune: 1.19
+  Pluto: 0.06
+   */
+  final TextEditingController _weightController = new TextEditingController();
   int radioValue = 0;
+  double _finalResult = 0.0;
+  String _formattedText = "";
   void handleRadioValueChanged(int value) {
     setState(() {
       radioValue = value;
-      print(radioValue);
+
+      switch (radioValue) {
+        case 0:
+          _finalResult = calculateWeight(_weightController.text, 0.06);
+          _formattedText = "Your Weight in Pluto is ${_finalResult.toStringAsFixed(1)}";
+          break;
+        case 1:
+          _finalResult = calculateWeight(_weightController.text, 0.38);
+          _formattedText = "Your Weight in Mars is ${_finalResult.toStringAsFixed(1)}";
+
+          break;
+        case 2:
+          _finalResult = calculateWeight(_weightController.text, 0.91);
+          _formattedText = "Your Weight in Venus is ${_finalResult.toStringAsFixed(1)}";
+
+      break;
+      }
     });
   }
 
@@ -39,7 +69,7 @@ class HomeState extends State<Home> {
               child: new Column(
                 children: <Widget>[
                   new TextField(
-                    controller: null,
+                    controller: _weightController,
                     keyboardType: TextInputType.number,
                     decoration: new InputDecoration(
                       labelText: "Your Weight",
@@ -56,7 +86,7 @@ class HomeState extends State<Home> {
                     children: <Widget>[
                       //radio buttos
                       new Radio<int>(
-                        activeColor: Colors.lightBlue,
+                          activeColor: Colors.lightBlue,
                           value: 0,
                           groupValue: radioValue,
                           onChanged: handleRadioValueChanged),
@@ -65,7 +95,7 @@ class HomeState extends State<Home> {
                         style: new TextStyle(color: Colors.white30),
                       ),
                       new Radio<int>(
-                        activeColor: Colors.indigoAccent,
+                          activeColor: Colors.indigoAccent,
                           value: 1,
                           groupValue: radioValue,
                           onChanged: handleRadioValueChanged),
@@ -74,7 +104,7 @@ class HomeState extends State<Home> {
                         style: new TextStyle(color: Colors.white30),
                       ),
                       new Radio<int>(
-                        activeColor: Colors.green,
+                          activeColor: Colors.green,
                           value: 2,
                           groupValue: radioValue,
                           onChanged: handleRadioValueChanged),
@@ -86,7 +116,9 @@ class HomeState extends State<Home> {
                   ),
                   new Padding(padding: EdgeInsets.all(10.0)),
                   // Result Text
-                  new Text("Hello There",
+                  new Text(
+                    _weightController.text.isEmpty ? "Please enter Weight" : _formattedText + "lbs",
+                      //"$formattedText lbs",
                       style: new TextStyle(
                           color: Colors.white,
                           fontSize: 19.4,
@@ -98,5 +130,14 @@ class HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  double calculateWeight(String weight, double multiplier) {
+    if (int.parse(weight).toString().isNotEmpty && int.parse(weight) > 0) {
+      return int.parse(weight) * multiplier;
+    } else {
+      print("Wrong!");
+      return int.parse("180") * 0.38;
+    }
   }
 }
